@@ -1,6 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 import Search from './Search.jsx';
+import Results from './Results.jsx';
+import Paginator from './Paginator.jsx';
 
 class App extends React.Component {
   constructor(props) {
@@ -8,7 +10,7 @@ class App extends React.Component {
     this.state = {
       q: '',
       page: 1,
-      results: [],
+      results: [{date:'', description:''}],
       search: ''
     }
   }
@@ -30,6 +32,15 @@ class App extends React.Component {
       q: this.state.search,
       page: 1
     })
+    axios.get(`http://localhost:3000/events?q=${this.state.search}&_page=${this.state.page}`)
+      .then(res => {
+        this.setState({
+          results: res.data
+        })
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
 
   handleTyping(e) {
@@ -38,11 +49,17 @@ class App extends React.Component {
     })
   }
 
-
   render() {
+    console.log(this.state)
     return (
       <div>
         <Search handleTyping={this.handleTyping.bind(this)} handleSubmit={this.handleSubmit.bind(this)}/>
+        <div style={{display: "flex"}}>
+        <div style={{display: "flex", width: "20%"}}></div>
+        <Results results={this.state.results}/>
+        <div style={{display: "flex", width: "20%"}}></div>
+        </div>
+        <Paginator />
       </div>
     )
   }
