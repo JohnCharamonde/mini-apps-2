@@ -68,7 +68,7 @@ class App extends React.Component {
     } else if(category === 'last') {
       uri = this.state.last;
     }
-
+    console.log(uri)
     axios.get(uri)
       .then(res => {
         this.setState({
